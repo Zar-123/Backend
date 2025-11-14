@@ -1,0 +1,26 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "name": "Ana"
+  },
+  {
+    "id": "f0e9d8c7-b6a5-4321-fedc-ba9876543210",
+    "name": "Luis"
+  },
+  {
+    "id": "1a2b3c4d-5e6f-7890-abcd-ef0123456789",
+    "name": "Carla"
+  },
+  {
+    "id": "10542c54-e85c-44be-90f3-23361fc07e87",
+    "name": "Juana"
+  },
+  {
+    "id": "aecc6dbe-5cda-4bfc-ab25-c1fd4f5db713",
+    "name": "Pepe"
+  },
+  {
+    "id": "cc20b30a-19cd-479c-a37a-a997e4046657",
+    "name": "Felipe"
+  }
+]

@@ -1,5 +1,5 @@
 import { writeFileSync, readFile, readFileSync } from 'fs';
-import { join } from 'path';
+import path from 'path';
 
 const DATA_FILE = path.join(process.cwd(), 'users.json');
 
@@ -13,26 +13,43 @@ const INITIAL_USERS = [
 
 export function loadUsers(){
     try{
-        console.log("Ruta del archivo: ", DATA_FILE);
-        const data = readFileSync(DATA_FILE, 'utf-8');
+        console.log('Ruta del archivo:', DATA_FILE);
+        const data = readFileSync(DATA_FILE,  'utf-8');
 
-        const parseData = data.trim() ? JSON.parse(data) : [];
-        users = parseData;
+        const parsedData = data.trim() ? JSON.parse(data) : [];
+        users = parsedData;
+
+        console.log(`✅ Datos cargados correctamente. Usuarios: ${users.length}`);
+    }catch(error){
+        if(error.code === "ENOENT"){
+            console.log(`⚠️ Archivo ${DATA_FILE} no encontrado. Creando archivo inicial.`);
+            users = INITIAL_USERS;
+            saveUsers();
+            console.log(`✅ Archivo users.json creado y guardado.`);
+        } else{
+            console.error("❌ Error grave al cargar o parsear los datos:", error);
+            users = [];
+        }
+
     }
 }
 
-writeFileSync(filePath, JSON.stringify(users, null, 2));
-console.log(`✅ Archivo users.json creado en:\n${filePath}`);
+export function saveUsers(){
+    try{
+        const data = JSON.stringify(users,null,2);
+        writeFileSync(DATA_FILE, data, 'utf-8');
+        console.log(`💾 Datos guardados correctamente.`);
 
-readFile(filePath, 'utf8', (err, data) => {
-    if(err){
-        console.error('❌ Error al leer el archivo:', err);
-        return
+    }catch(error){
+        console.error("❌ Error al guardar los datos:", error);
+        throw new Error("No se pudieron guardar los datos en el disco.");
+
     }
+}
 
-    const parsedUsers = JSON.parse(data);
-    console.log('📂 Contenido leído desde el archivo:', parsedUsers);
-})
+export function getUsers(){
+    return users;
+}
 
 
 
