@@ -1,7 +1,7 @@
 import express from "express";
 import { getUsers, saveUsers } from "../data.js";
 import {v4 as uuidv4} from 'uuid';
-import { verificarApiKey } from "../middleware.js";
+import { verificarTokenJWT, verificarRol } from "../middleware.js";
 
 const userRouter = express.Router();
 
@@ -26,7 +26,7 @@ userRouter.get("/:id", (req,res) => {
 });
 
 //Crear
-userRouter.post("/", verificarApiKey, (req,res) =>{
+userRouter.post("/", verificarTokenJWT, verificarRol(['admin', 'guest']), (req,res) =>{
     try {
         const nuevo = req.body;
 
@@ -66,7 +66,7 @@ userRouter.post("/", verificarApiKey, (req,res) =>{
 })
 
 //Eliminar
-userRouter.delete("/:id",verificarApiKey ,(req,res) =>{
+userRouter.delete("/:id",verificarTokenJWT , verificarRol(['admin']), (req,res) =>{
     try {
         const idEliminar = req.params.id;
         const users = getUsers();
@@ -89,7 +89,7 @@ userRouter.delete("/:id",verificarApiKey ,(req,res) =>{
 })
 
 //Actualizar
-userRouter.put("/:id",verificarApiKey, (req,res) => {
+userRouter.put("/:id",verificarTokenJWT, verificarRol(['admin', 'guest']), (req,res) => {
     try {
         const idActualizar = req.params.id;
         const { name } = req.body;
