@@ -1,29 +1,21 @@
-import express from "express";
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from "../express.js";
-
-const authRouter = express.Router();
+import { JWT_SECRET } from '../express';
 
 const mockUserDb = [
     {username: "admin", password: "contraseña123", id: "usuario-1", role: "admin"},
     {username: "guest", password: "guest", id: "usuario-2", role: "guest"}
 ]
 
-authRouter.post("/login", (req,res) =>{
-    const {username, password} = req.body;
-
-    if(!username || !password){
-        return res.status(404).json({error : "Faltan credenciales (username y password)"});
-    }  
-
+export function generarToken(username, password){
     const user = mockUserDb.find(
         u => u.username === username  && u.password === password
     );
 
-    if(!user){
-        return res.status(404).json({error: "Credenciales invalidas"})
+    if (!user) {
+        const error = new Error("Credenciales inválidas. Usuario no encontrado o contraseña incorrecta.");
+        error.status = 401; // Unauthorized
+        throw error;
     }
-
     const payload = {
         id: user.id,
         username: user.username,
@@ -43,7 +35,7 @@ authRouter.post("/login", (req,res) =>{
     } catch (error) {
         console.error("❌ Error al firmar el token JWT:", error);
         res.status(500).json({error: "Error interno al generar el token"})
+        signError.status = 500;
+        throw signError;
     }
-})
-
-export default authRouter;
+}

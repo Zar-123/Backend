@@ -20,9 +20,11 @@ app.use("/auth", rutasAuth);
 app.use("/users", rutaUsuario);
 
 app.use((err,req,res,next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        error: err.message || "Algo salio mal en el server"
+    const status = err.status || 500;
+    console.error(`❌ Error en el servidor (${status}):`, err.message);
+    res.status(status).json({
+        error: err.message || "Algo salió mal en el server",
+        details: process.env.NODE_ENV === 'development' ? err.stack : undefined
     });
 })
 
